@@ -2,7 +2,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-8 mx-auto">
                 <p class="text-center display-4">Manage Category</p>
                 @if (Session::get('success'))
                     <div class="alert alert-info">
@@ -18,6 +18,7 @@
                             <th>Status</th>
                             <th>Edit</th>
                             <th>Delete</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,7 +29,9 @@
                                 <td>{{ $cat->description }}</td>
                                 <td>{{ $cat->status }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-success">Edit</button>
+                                    <a href="{{ route('category.edit',$cat->id) }}">
+                                        <button type="button" class="btn btn-success">Edit</button>
+                                    </a>
                                 </td>
                                 <td>
                                     <form action="{{ route('category.destroy',$cat->id) }}" method="post">
@@ -36,6 +39,22 @@
                                         @method('delete')
                                         <button type="submit" class="btn btn-danger">Delete</button>
                                     </form>
+                                </td>
+
+                                <td>
+                                    @if ($cat->status == "Active")
+                                        <form action="{{ route('categorySoftdelete') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $cat->id }}"> 
+                                            <button type="submit" class="btn btn-danger">Inactive</button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('categorySoftdelete') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $cat->id }}"> 
+                                            <button type="submit" class="btn btn-info">Active</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
 
